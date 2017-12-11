@@ -29,14 +29,14 @@ class cached_property(object):
 
 class ColorThief(object):
     """Color thief main class."""
-    def __init__(self, file):
+    def __init__(self, image):
         """Create one color thief for one image.
 
         :param file: A filename (string) or a file object. The file object
                      must implement `read()`, `seek()`, and `tell()` methods,
                      and be opened in binary mode.
         """
-        self.image = Image.open(file)
+        self.image = image
 
     def get_color(self, quality=10):
         """Get the dominant color.
@@ -354,7 +354,8 @@ class CMap(object):
 
     @property
     def palette(self):
-        return self.vboxes.map(lambda x: x['color'])
+		total = sum(self.vboxes.map(lambda x: x['vbox'].count))
+		return self.vboxes.map(lambda x: x['color'] + (x['vbox'].count, total, int(x['vbox'].count / float(total) * 100)))
 
     def push(self, vbox):
         self.vboxes.push({
